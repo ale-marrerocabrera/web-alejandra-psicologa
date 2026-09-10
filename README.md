@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-La aplicación estará disponible en `http://localhost:5173`.
+La aplicación estará disponible en `http://localhost:3000`.
 
 ## Producción con Docker
 
@@ -17,6 +17,6 @@ La aplicación estará disponible en `http://localhost:5173`.
 docker compose up --build
 ```
 
-La aplicación estará disponible en `http://localhost:8080`.
+La aplicación estará disponible en `http://localhost:3000`.
 
 La imagen construye los archivos estáticos y los sirve mediante Nginx. La configuración de Nginx también admite rutas del cliente de React.
