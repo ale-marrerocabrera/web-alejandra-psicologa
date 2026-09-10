@@ -15,6 +15,7 @@ const initialForm = {
   motivo: "",
   mensaje: "",
   consentimiento: false,
+  website: "",
 };
 
 const inputClass =
@@ -40,6 +41,7 @@ export default function Contact() {
         email: form.email,
         phone: form.telefono || null,
         message: form.mensaje,
+        website: form.website,
       });
       toast.success("Mensaje enviado. Te responderé muy pronto, con calma y cuidado.");
       setForm(initialForm);
@@ -96,6 +98,18 @@ export default function Contact() {
             className="bg-[#FAF7F2] rounded-3xl p-6 sm:p-10 shadow-[0_30px_60px_rgba(0,0,0,0.25)]"
             noValidate={false}
           >
+            <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <label htmlFor="website">Sitio web</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex="-1"
+                autoComplete="off"
+                value={form.website}
+                onChange={(e) => update("website", e.target.value)}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="nombre" className="block text-sm font-medium text-[#2C2A29] mb-2">
