@@ -22,3 +22,7 @@ docker compose up --build
 La aplicación estará disponible en `http://localhost:3000`.
 
 La imagen construye los archivos estáticos y los sirve mediante Nginx. La configuración de Nginx también admite rutas del cliente de React.
+
+## Contenido dinámico
+
+Al iniciar, el frontend consulta `GET /api/content` en la URL configurada mediante `VITE_API_URL`. Si la API no está disponible o no entrega un campo, usa los textos locales definidos en `src/content/defaultContent.js`.
