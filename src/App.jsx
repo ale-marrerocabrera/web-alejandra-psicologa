@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { Route, Routes } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -10,6 +11,8 @@ import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { useContentState } from "@/content/ContentProvider";
+import { ContentProvider } from "@/content/ContentProvider";
+import { AdminArea } from "@/admin/AdminArea";
 
 function ContentUnavailable() {
   return (
@@ -22,7 +25,7 @@ function ContentUnavailable() {
   );
 }
 
-function App() {
+function PublicSite() {
   const { content, isLoading, isError } = useContentState();
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.15, smoothWheel: true, anchors: true });
@@ -65,6 +68,23 @@ function App() {
       <Footer />
       <Toaster position="top-center" richColors />
     </div>
+  );
+}
+
+function PublicApp() {
+  return (
+    <ContentProvider>
+      <PublicSite />
+    </ContentProvider>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/admin/*" element={<AdminArea />} />
+      <Route path="*" element={<PublicApp />} />
+    </Routes>
   );
 }
 

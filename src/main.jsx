@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
 import "@/styles/global.css";
 import App from "@/App";
-import { ContentProvider } from "@/content/ContentProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,9 +18,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ContentProvider>
+      <BrowserRouter>
         <App />
-      </ContentProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>,
 );
