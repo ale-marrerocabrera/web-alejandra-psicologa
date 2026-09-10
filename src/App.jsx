@@ -9,8 +9,21 @@ import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { useContentState } from "@/content/ContentProvider";
+
+function ContentUnavailable() {
+  return (
+    <main className="min-h-screen grid place-items-center bg-[#FAF7F2] px-6 text-center text-[#2D4030]">
+      <div>
+        <p className="font-serif text-3xl sm:text-4xl">La web no está disponible en estos momentos.</p>
+        <p className="mt-4 text-[#524E4A]">Por favor, inténtalo de nuevo más tarde.</p>
+      </div>
+    </main>
+  );
+}
 
 function App() {
+  const { content, isLoading, isError } = useContentState();
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.15, smoothWheel: true, anchors: true });
     let frame;
@@ -24,6 +37,14 @@ function App() {
       lenis.destroy();
     };
   }, []);
+
+  if (isLoading) {
+    return <main className="min-h-screen bg-[#FAF7F2]" aria-busy="true" />;
+  }
+
+  if (isError || !content) {
+    return <ContentUnavailable />;
+  }
 
   return (
     <div className="bg-[#FAF7F2] text-[#2C2A29] font-sans antialiased overflow-x-clip">

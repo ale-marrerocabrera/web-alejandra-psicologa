@@ -25,4 +25,4 @@ La imagen construye los archivos estáticos y los sirve mediante Nginx. La confi
 
 ## Contenido dinámico
 
-Al iniciar, el frontend consulta `GET /api/content` en la URL configurada mediante `VITE_API_URL`. Si la API no está disponible o no entrega un campo, usa los textos locales definidos en `src/content/defaultContent.js`.
+Al iniciar, el frontend consulta `GET /api/content` en la URL configurada mediante `VITE_API_URL`. Si la API no está disponible o no entrega contenido, muestra un aviso de indisponibilidad y no presenta textos locales de respaldo.
