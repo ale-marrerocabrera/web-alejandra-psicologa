@@ -36,12 +36,10 @@ export default function Contact() {
     setLoading(true);
     try {
       await axios.post(`${API}/contact`, {
-        nombre: form.nombre,
+        name: form.nombre,
         email: form.email,
-        telefono: form.telefono || null,
-        motivo: form.motivo || null,
-        mensaje: form.mensaje,
-        consentimiento: form.consentimiento,
+        phone: form.telefono || null,
+        message: form.mensaje,
       });
       toast.success("Mensaje enviado. Te responderé muy pronto, con calma y cuidado.");
       setForm(initialForm);

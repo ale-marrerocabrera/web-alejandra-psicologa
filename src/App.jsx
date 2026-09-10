@@ -39,7 +39,11 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <main className="min-h-screen bg-[#FAF7F2]" aria-busy="true" />;
+    return (
+      <main className="min-h-screen grid place-items-center bg-[#FAF7F2] text-[#524E4A]" aria-busy="true">
+        Cargando…
+      </main>
+    );
   }
 
   if (isError || !content) {
