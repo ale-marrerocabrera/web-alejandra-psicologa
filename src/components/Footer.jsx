@@ -6,8 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useContent } from "@/content/ContentProvider";
 
 export default function Footer() {
+  const { brand, contact, footer } = useContent();
   return (
     <footer data-testid="main-footer" className="bg-[#2D4030] border-t border-[#FAF7F2]/10">
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto py-14">
@@ -15,25 +17,24 @@ export default function Footer() {
           <div>
             <a href="#inicio" data-testid="footer-brand-link" className="flex items-center gap-2.5 text-[#FAF7F2]">
               <Flower2 className="w-6 h-6 text-[#D4A359]" strokeWidth={1.5} />
-              <span className="font-serif text-xl italic">[Nombre de la psicóloga]</span>
+              <span className="font-serif text-xl italic">{brand.name}</span>
             </a>
             <p className="mt-4 text-sm text-[#FAF7F2]/60 leading-relaxed max-w-xs">
-              Psicología con calidez humana y rigor profesional. Un espacio seguro
-              para tu bienestar emocional.
+              {footer.description}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">Contacto</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">{footer.contactHeading}</h3>
             <ul className="mt-4 space-y-2.5 text-sm text-[#FAF7F2]/75">
-              <li>[email@placeholder.com]</li>
-              <li>[+34 000 000 000]</li>
-              <li>[Ciudad] · Online y presencial</li>
+              <li>{contact.email}</li>
+              <li>{contact.phone}</li>
+              <li>{contact.location}</li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">Sígueme</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">{footer.followHeading}</h3>
             <div className="mt-4 flex gap-3">
               {[
                 { icon: Instagram, label: "Instagram", testid: "footer-social-instagram" },
@@ -56,7 +57,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-[#FAF7F2]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[#FAF7F2]/50">
-            © 2026 [Nombre de la psicóloga] · Todos los derechos reservados
+            {footer.copyright}
           </p>
           <Dialog>
             <DialogTrigger asChild>
@@ -64,12 +65,12 @@ export default function Footer() {
                 data-testid="footer-privacy-button"
                 className="text-xs text-[#FAF7F2]/60 underline underline-offset-4 hover:text-[#FAF7F2] transition-colors duration-300"
               >
-                Aviso de privacidad
+                {footer.privacyTitle}
               </button>
             </DialogTrigger>
             <DialogContent data-testid="privacy-modal" className="bg-[#FAF7F2] border-[#E5DFD5] max-w-lg">
               <DialogHeader>
-                <DialogTitle className="font-serif text-2xl text-[#2D4030]">Aviso de privacidad</DialogTitle>
+                <DialogTitle className="font-serif text-2xl text-[#2D4030]">{footer.privacyTitle}</DialogTitle>
               </DialogHeader>
               <div className="text-sm text-[#524E4A] leading-relaxed space-y-3">
                 <p>

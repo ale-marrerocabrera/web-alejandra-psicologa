@@ -1,49 +1,29 @@
 import { Reveal } from "@/components/Reveal";
 import { Star, Quote } from "lucide-react";
-
-const testimonials = [
-  {
-    initials: "M.G.",
-    tag: "Proceso de ansiedad",
-    quote:
-      "Llegué sin poder dormir por la ansiedad y hoy tengo herramientas para mi día a día. Me sentí escuchada desde la primera sesión.",
-  },
-  {
-    initials: "A.R.",
-    tag: "Terapia de pareja",
-    quote:
-      "Nos ayudó a hablarnos de otra manera. Recuperamos la confianza que creíamos perdida. Eternamente agradecidos.",
-  },
-  {
-    initials: "C.L.",
-    tag: "Duelo",
-    quote:
-      "Acompañó mi duelo con un respeto y una calidez que no olvidaré. Aprendí a convivir con la pérdida sin que me apagara.",
-  },
-];
+import { useContent } from "@/content/ContentProvider";
 
 export default function Testimonials() {
+  const { testimonials } = useContent();
   return (
     <section id="testimonios" data-testid="testimonials-section" className="py-24 sm:py-32">
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto">
         <Reveal className="max-w-2xl mx-auto text-center">
           <p className="text-xs sm:text-sm tracking-widest uppercase text-[#8A9A86] font-semibold">
-            Testimonios
+            {testimonials.eyebrow}
           </p>
           <h2
             data-testid="testimonials-heading"
             className="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl text-[#2C2A29] leading-tight"
           >
-            Historias que <span className="italic text-[#C86D51]">florecieron</span>
+            {testimonials.titleBefore}<span className="italic text-[#C86D51]">{testimonials.titleAccent}</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg text-[#524E4A] leading-relaxed">
-            Por confidencialidad, comparto estas palabras con iniciales y con el
-            permiso de quienes las escribieron.
+            {testimonials.intro}
           </p>
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {testimonials.map((t, i) => (
+          {testimonials.items.map((t, i) => (
             <Reveal key={t.initials} delay={i * 0.12}>
               <figure
                 data-testid={`testimonial-card-${i + 1}`}

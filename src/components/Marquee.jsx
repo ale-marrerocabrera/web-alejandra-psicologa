@@ -1,15 +1,8 @@
 import { Flower2 } from "lucide-react";
-
-const phrases = [
-  "Escucha sin juicio",
-  "A tu ritmo",
-  "Terapia online y presencial",
-  "Espacio confidencial",
-  "Acompañamiento cálido",
-  "Primera sesión de orientación",
-];
+import { useContent } from "@/content/ContentProvider";
 
 export default function Marquee() {
+  const { marquee: phrases } = useContent();
   const items = [...phrases, ...phrases];
   return (
     <div

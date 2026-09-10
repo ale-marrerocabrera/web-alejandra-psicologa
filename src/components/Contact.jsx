@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Reveal } from "@/components/Reveal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
+import { useContent } from "@/content/ContentProvider";
 
 const API = `${import.meta.env.VITE_API_URL ?? ""}/api`;
 
@@ -20,6 +21,7 @@ const inputClass =
   "w-full rounded-xl border border-[#E5DFD5] bg-white px-4 py-3 text-[#2C2A29] placeholder:text-[#A8A29B] focus:outline-none focus:ring-2 focus:ring-[#8A9A86]/50 focus:border-[#8A9A86] transition-shadow duration-300";
 
 export default function Contact() {
+  const { contact } = useContent();
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
 
@@ -55,17 +57,16 @@ export default function Contact() {
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         <Reveal className="lg:col-span-5">
           <p className="text-xs sm:text-sm tracking-widest uppercase text-[#8A9A86] font-semibold">
-            Contacto
+            {contact.eyebrow}
           </p>
           <h2
             data-testid="contact-heading"
             className="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl text-[#FAF7F2] leading-tight"
           >
-            Dar el primer paso también es un <span className="italic text-[#D4A359]">acto de valentía</span>.
+            {contact.titleBefore}<span className="italic text-[#D4A359]">{contact.titleAccent}</span>{contact.titleAfter}
           </h2>
           <p className="mt-6 text-base sm:text-lg text-[#FAF7F2]/75 leading-relaxed">
-            Escríbeme y hablemos. Te responderé personalmente, sin compromiso, y
-            juntas veremos si soy la persona adecuada para acompañarte.
+            {contact.intro}
           </p>
 
           <div className="mt-10 space-y-5" data-testid="contact-info-list">
@@ -73,19 +74,19 @@ export default function Contact() {
               <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
                 <Mail className="w-5 h-5" strokeWidth={1.75} />
               </span>
-              <span className="text-sm sm:text-base">[email@placeholder.com]</span>
+              <span className="text-sm sm:text-base">{contact.email}</span>
             </div>
             <div className="flex items-center gap-4 text-[#FAF7F2]/85">
               <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
                 <Phone className="w-5 h-5" strokeWidth={1.75} />
               </span>
-              <span className="text-sm sm:text-base">[+34 000 000 000]</span>
+              <span className="text-sm sm:text-base">{contact.phone}</span>
             </div>
             <div className="flex items-center gap-4 text-[#FAF7F2]/85">
               <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
                 <MapPin className="w-5 h-5" strokeWidth={1.75} />
               </span>
-              <span className="text-sm sm:text-base">[Ciudad] · Sesiones online y presenciales</span>
+              <span className="text-sm sm:text-base">{contact.location}</span>
             </div>
           </div>
         </Reveal>

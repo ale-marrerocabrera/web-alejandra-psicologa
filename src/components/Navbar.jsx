@@ -1,16 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Flower2 } from "lucide-react";
-
-const links = [
-  { label: "Sobre mí", href: "#sobre-mi", testid: "nav-link-about" },
-  { label: "Servicios", href: "#servicios", testid: "nav-link-services" },
-  { label: "Testimonios", href: "#testimonios", testid: "nav-link-testimonials" },
-  { label: "Contacto", href: "#contacto", testid: "nav-link-contact" },
-];
+import { useContent } from "@/content/ContentProvider";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { brand, navigation } = useContent();
+  const links = navigation.links.map((link) => ({ ...link, testid: `nav-link-${link.href.slice(1)}` }));
 
   return (
     <header
@@ -25,7 +21,7 @@ export default function Navbar() {
         >
           <Flower2 className="w-6 h-6 text-[#C86D51]" strokeWidth={1.5} />
           <span className="font-serif text-lg sm:text-xl font-medium italic">
-            [Alejandra]
+            {brand.name}
           </span>
         </a>
 
@@ -45,7 +41,7 @@ export default function Navbar() {
             data-testid="nav-cta-button"
             className="inline-flex items-center px-5 py-2.5 rounded-full bg-[#2D4030] text-[#FAF7F2] text-sm font-medium hover:bg-[#C86D51] hover:-translate-y-0.5 transition-all duration-300"
           >
-            Agenda tu sesión
+            {navigation.cta}
           </a>
         </nav>
 
@@ -89,7 +85,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="inline-flex justify-center px-5 py-3 rounded-full bg-[#2D4030] text-[#FAF7F2] text-sm font-medium"
               >
-                Agenda tu sesión
+                {navigation.cta}
               </a>
             </div>
           </motion.nav>
