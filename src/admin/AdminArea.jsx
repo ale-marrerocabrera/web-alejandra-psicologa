@@ -81,7 +81,7 @@ function AdminShell({ user }) {
         </nav>
         <main><Outlet /></main>
       </div>
-    </div>
+    </div> 
   );
 }
 
@@ -154,7 +154,28 @@ function AdminMessages() {
   return <>
     <PageHeading eyebrow="Mensajes" title="Consultas recibidas" description="Gestiona cada conversación con cuidado y archiva lo que ya esté resuelto." />
     <div className="mb-5 flex flex-wrap gap-2">{[["", "Todos"], ["unread", "Sin leer"], ["read", "Leídos"], ["archived", "Archivados"]].map(([value, label]) => <button key={value} onClick={() => setStatusFilter(value)} className={`rounded-full px-4 py-2 text-sm ${statusFilter === value ? "bg-[#2D4030] text-white" : "bg-white text-[#524E4A] ring-1 ring-[#DED6CA]"}`}>{label}</button>)}</div>
-    {messages.isLoading ? <PanelLoading /> : messages.isError ? <PanelError /> : <div className="space-y-4">{messages.data.length === 0 ? <EmptyMessages /> : messages.data.map((message) => <article key={message.id} className="rounded-2xl border border-[#DED6CA] bg-white p-5 sm:p-6"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="font-semibold text-[#2D4030]">{message.name}</p><a href={`mailto:${message.email}`} className="text-sm text-[#687B64] hover:underline">{message.email}</a></div><StatusBadge status={message.status} /></div><p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-[#524E4A]">{message.message}</p><div className="mt-5 flex flex-wrap gap-2 border-t border-[#EEE9E1] pt-4"><button onClick={() => changeStatus.mutate({ id: message.id, status: "read" })} className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]">Marcar leído</button><button onClick={() => changeStatus.mutate({ id: message.id, status: "archived" })} className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]">Archivar</button><button onClick={() => { if (window.confirm("¿Eliminar este mensaje definitivamente?")) remove.mutate(message.id); }} className="ml-auto inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-[#B7543C] hover:bg-[#FFF2EF]"><Trash2 className="h-3.5 w-3.5" /> Eliminar</button></div></article>)}</div>}
+    {messages.isLoading ? <PanelLoading /> : messages.isError ? <PanelError /> : (
+      <div className="space-y-4">
+        {messages.data.length === 0 ? <EmptyMessages /> : messages.data.map((message) => (
+          <article key={message.id} className="rounded-2xl border border-[#DED6CA] bg-white p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-semibold text-[#2D4030]">{message.name}</p>
+                <a href={`tel:${message.phone}`} className="block text-sm text-[#687B64] hover:underline">{message.phone}</a>
+                <a href={`mailto:${message.email}`} className="block text-sm text-[#687B64] hover:underline">{message.email}</a>
+              </div>
+              <StatusBadge status={message.status} />
+            </div>
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-[#524E4A]">{message.message}</p>
+            <div className="mt-5 flex flex-wrap gap-2 border-t border-[#EEE9E1] pt-4">
+              <button onClick={() => changeStatus.mutate({ id: message.id, status: "read" })} className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]">Marcar leído</button>
+              <button onClick={() => changeStatus.mutate({ id: message.id, status: "archived" })} className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]">Archivar</button>
+              <button onClick={() => { if (window.confirm("¿Eliminar este mensaje definitivamente?")) remove.mutate(message.id); }} className="ml-auto inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold text-[#B7543C] hover:bg-[#FFF2EF]"><Trash2 className="h-3.5 w-3.5" /> Eliminar</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
   </>;
 }
 
