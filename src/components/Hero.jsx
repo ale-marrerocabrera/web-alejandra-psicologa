@@ -6,7 +6,10 @@ import { useContent } from "@/content/ContentProvider";
 export default function Hero() {
   const ref = useRef(null);
   const { hero } = useContent();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
@@ -27,7 +30,10 @@ export default function Hero() {
       />
 
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative">
-        <motion.div style={{ y: textY }} className="lg:col-span-7 relative z-10">
+        <motion.div
+          style={{ y: textY }}
+          className="lg:col-span-7 relative z-10"
+        >
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -49,7 +55,11 @@ export default function Hero() {
                   className={`block ${i === hero.titleLines.length - 1 ? "italic text-[#C86D51]" : ""}`}
                   initial={{ y: "110%" }}
                   animate={{ y: "0%" }}
-                  transition={{ duration: 0.9, delay: 0.35 + i * 0.14, ease: [0.215, 0.61, 0.355, 1.0] }}
+                  transition={{
+                    duration: 0.9,
+                    delay: 0.35 + i * 0.14,
+                    ease: [0.215, 0.61, 0.355, 1.0],
+                  }}
                 >
                   {text}
                 </motion.span>
@@ -106,7 +116,11 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, delay: 0.5, ease: [0.215, 0.61, 0.355, 1.0] }}
+            transition={{
+              duration: 1.1,
+              delay: 0.5,
+              ease: [0.215, 0.61, 0.355, 1.0],
+            }}
             className="relative"
           >
             <div className="overflow-hidden rounded-[2.5rem] rounded-tr-[8rem] border border-[#E5DFD5] shadow-[0_30px_60px_rgba(45,64,48,0.12)]">
@@ -125,7 +139,9 @@ export default function Hero() {
               className="absolute -bottom-6 -left-4 sm:-left-8 bg-white/90 backdrop-blur-md border border-[#E5DFD5] rounded-2xl px-5 py-4 shadow-[0_10px_30px_rgba(45,64,48,0.08)]"
               data-testid="hero-floating-card"
             >
-              <p className="font-serif text-2xl text-[#2D4030]">{hero.experience}</p>
+              <p className="font-serif text-2xl text-[#2D4030]">
+                {hero.experience}
+              </p>
               <p className="text-xs text-[#6E6963] tracking-wide uppercase font-medium">
                 {hero.experienceLabel}
               </p>

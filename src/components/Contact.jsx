@@ -26,7 +26,8 @@ export default function Contact() {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
 
-  const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field, value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,17 +44,25 @@ export default function Contact() {
         message: form.mensaje,
         website: form.website,
       });
-      toast.success("Mensaje enviado. Te responderé muy pronto, con calma y cuidado.");
+      toast.success(
+        "Mensaje enviado. Te responderé muy pronto, con calma y cuidado.",
+      );
       setForm(initialForm);
     } catch (err) {
-      toast.error("No se pudo enviar el mensaje. Inténtalo de nuevo en unos minutos.");
+      toast.error(
+        "No se pudo enviar el mensaje. Inténtalo de nuevo en unos minutos.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contacto" data-testid="contact-section" className="py-24 sm:py-32 bg-[#2D4030]">
+    <section
+      id="contacto"
+      data-testid="contact-section"
+      className="py-24 sm:py-32 bg-[#2D4030]"
+    >
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         <Reveal className="lg:col-span-5">
           <p className="text-xs sm:text-sm tracking-widest uppercase text-[#8A9A86] font-semibold">
@@ -63,7 +72,9 @@ export default function Contact() {
             data-testid="contact-heading"
             className="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl text-[#FAF7F2] leading-tight"
           >
-            {contact.titleBefore}<span className="italic text-[#D4A359]">{contact.titleAccent}</span>{contact.titleAfter}
+            {contact.titleBefore}
+            <span className="italic text-[#D4A359]">{contact.titleAccent}</span>
+            {contact.titleAfter}
           </h2>
           <p className="mt-6 text-base sm:text-lg text-[#FAF7F2]/75 leading-relaxed">
             {contact.intro}
@@ -98,7 +109,10 @@ export default function Contact() {
             className="bg-[#FAF7F2] rounded-3xl p-6 sm:p-10 shadow-[0_30px_60px_rgba(0,0,0,0.25)]"
             noValidate={false}
           >
-            <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+            <div
+              className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"
+              aria-hidden="true"
+            >
               <label htmlFor="website">Sitio web</label>
               <input
                 id="website"
@@ -112,7 +126,10 @@ export default function Contact() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="nombre" className="block text-sm font-medium text-[#2C2A29] mb-2">
+                <label
+                  htmlFor="nombre"
+                  className="block text-sm font-medium text-[#2C2A29] mb-2"
+                >
                   Nombre *
                 </label>
                 <input
@@ -128,7 +145,10 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-[#2C2A29] mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-[#2C2A29] mb-2"
+                >
                   Email *
                 </label>
                 <input
@@ -143,8 +163,12 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="telefono" className="block text-sm font-medium text-[#2C2A29] mb-2">
-                  Teléfono <span className="text-[#6E6963] font-normal">(opcional)</span>
+                <label
+                  htmlFor="telefono"
+                  className="block text-sm font-medium text-[#2C2A29] mb-2"
+                >
+                  Teléfono{" "}
+                  <span className="text-[#6E6963] font-normal">(opcional)</span>
                 </label>
                 <input
                   id="telefono"
@@ -157,7 +181,10 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="motivo" className="block text-sm font-medium text-[#2C2A29] mb-2">
+                <label
+                  htmlFor="motivo"
+                  className="block text-sm font-medium text-[#2C2A29] mb-2"
+                >
                   Motivo de consulta
                 </label>
                 <select
@@ -172,14 +199,19 @@ export default function Contact() {
                   <option value="Terapia de pareja">Terapia de pareja</option>
                   <option value="Duelo y pérdida">Duelo y pérdida</option>
                   <option value="Autoestima">Autoestima</option>
-                  <option value="Crecimiento personal">Crecimiento personal</option>
+                  <option value="Crecimiento personal">
+                    Crecimiento personal
+                  </option>
                   <option value="Otro">Otro</option>
                 </select>
               </div>
             </div>
 
             <div className="mt-5">
-              <label htmlFor="mensaje" className="block text-sm font-medium text-[#2C2A29] mb-2">
+              <label
+                htmlFor="mensaje"
+                className="block text-sm font-medium text-[#2C2A29] mb-2"
+              >
                 Cuéntame brevemente qué te trae aquí *
               </label>
               <textarea
@@ -200,13 +232,18 @@ export default function Contact() {
                 id="consentimiento"
                 data-testid="contact-consent-checkbox"
                 checked={form.consentimiento}
-                onCheckedChange={(checked) => update("consentimiento", checked === true)}
+                onCheckedChange={(checked) =>
+                  update("consentimiento", checked === true)
+                }
                 className="mt-0.5 border-[#8A9A86] data-[state=checked]:bg-[#2D4030] data-[state=checked]:border-[#2D4030]"
               />
-              <label htmlFor="consentimiento" className="text-sm text-[#524E4A] leading-relaxed cursor-pointer">
+              <label
+                htmlFor="consentimiento"
+                className="text-sm text-[#524E4A] leading-relaxed cursor-pointer"
+              >
                 He leído y acepto el aviso de privacidad. Mis datos se usarán
-                únicamente para responder a mi consulta y nunca se compartirán con
-                terceros. *
+                únicamente para responder a mi consulta y nunca se compartirán
+                con terceros. *
               </label>
             </div>
 

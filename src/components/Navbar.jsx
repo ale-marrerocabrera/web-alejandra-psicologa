@@ -6,7 +6,10 @@ import { useContent } from "@/content/ContentProvider";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { brand, navigation } = useContent();
-  const links = navigation.links.map((link) => ({ ...link, testid: `nav-link-${link.href.slice(1)}` }));
+  const links = navigation.links.map((link) => ({
+    ...link,
+    testid: `nav-link-${link.href.slice(1)}`,
+  }));
 
   return (
     <header
@@ -25,7 +28,10 @@ export default function Navbar() {
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-8" aria-label="Navegación principal">
+        <nav
+          className="hidden md:flex items-center gap-8"
+          aria-label="Navegación principal"
+        >
           {links.map((link) => (
             <a
               key={link.href}

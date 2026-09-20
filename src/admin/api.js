@@ -16,5 +16,7 @@ function csrfToken() {
 
 export function csrfConfig() {
   const token = csrfToken();
-  return token ? { headers: { "X-CSRF-Token": decodeURIComponent(token) } } : {};
+  return token
+    ? { headers: { "X-CSRF-Token": decodeURIComponent(token) } }
+    : {};
 }

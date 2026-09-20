@@ -18,8 +18,12 @@ function ContentUnavailable() {
   return (
     <main className="min-h-screen grid place-items-center bg-[#FAF7F2] px-6 text-center text-[#2D4030]">
       <div>
-        <p className="font-serif text-3xl sm:text-4xl">La web no está disponible en estos momentos.</p>
-        <p className="mt-4 text-[#524E4A]">Por favor, inténtalo de nuevo más tarde.</p>
+        <p className="font-serif text-3xl sm:text-4xl">
+          La web no está disponible en estos momentos.
+        </p>
+        <p className="mt-4 text-[#524E4A]">
+          Por favor, inténtalo de nuevo más tarde.
+        </p>
       </div>
     </main>
   );
@@ -28,7 +32,11 @@ function ContentUnavailable() {
 function PublicSite() {
   const { content, isLoading, isError } = useContentState();
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.15, smoothWheel: true, anchors: true });
+    const lenis = new Lenis({
+      duration: 1.15,
+      smoothWheel: true,
+      anchors: true,
+    });
     let frame;
     const raf = (time) => {
       lenis.raf(time);
@@ -43,7 +51,10 @@ function PublicSite() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen grid place-items-center bg-[#FAF7F2] text-[#524E4A]" aria-busy="true">
+      <main
+        className="min-h-screen grid place-items-center bg-[#FAF7F2] text-[#524E4A]"
+        aria-busy="true"
+      >
         Cargando…
       </main>
     );

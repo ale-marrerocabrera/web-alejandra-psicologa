@@ -16,7 +16,10 @@ export default function Marquee() {
             <span className="font-serif text-lg sm:text-xl italic text-[#2D4030] whitespace-nowrap">
               {phrase}
             </span>
-            <Flower2 className="w-4 h-4 text-[#C86D51] shrink-0" strokeWidth={1.5} />
+            <Flower2
+              className="w-4 h-4 text-[#C86D51] shrink-0"
+              strokeWidth={1.5}
+            />
           </span>
         ))}
       </div>
