@@ -50,7 +50,7 @@ export default function Hero() {
             className="mt-7 font-serif font-normal tracking-tight text-[#2D4030] text-4xl sm:text-5xl lg:text-7xl leading-[1.08]"
           >
             {hero.titleLines.map((text, i) => (
-              <span key={text} className="block overflow-hidden pb-1">
+              <span key={text} className="block overflow-hidden pb-1" style={{ whiteSpace: 'pre-line' }}>
                 <motion.span
                   className={`block ${i === hero.titleLines.length - 1 ? "italic text-[#C86D51]" : ""}`}
                   initial={{ y: "110%" }}

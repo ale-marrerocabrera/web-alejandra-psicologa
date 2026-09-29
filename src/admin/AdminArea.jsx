@@ -400,8 +400,11 @@ function AdminContent() {
     if (contentQuery.data?.data) setContent(contentQuery.data.data);
   }, [contentQuery.data]);
   const save = useMutation({
-    mutationFn: () =>
-      adminApi.put("/admin/content/homepage", { data: content }, csrfConfig()),
+    mutationFn: () => {
+      const data = structuredClone(content);
+      data.hero.titleLines = data.hero.titleLines.filter((line) => line.trim());
+      return adminApi.put("/admin/content/homepage", { data }, csrfConfig());
+    },
     onSuccess: (response) => {
       setContent(response.data.data);
       toast.success("Contenido guardado.");
@@ -427,8 +430,7 @@ function AdminContent() {
     update(
       path,
       value
-        .split("\n")
-        .map((item) => item.trim())
+        .map((item) => item)
         .filter(Boolean),
     );
   if (contentQuery.isLoading || !content) return <PanelLoading />;
@@ -499,9 +501,9 @@ function AdminContent() {
             onChange={(value) => update("hero.badge", value)}
           />
           <TextArea
-            label="Titular · una línea por renglón"
+            label="Titular"
             value={content.hero.titleLines.join("\n")}
-            onChange={(value) => listUpdate("hero.titleLines", value)}
+            onChange={(value) => update("hero.titleLines", value.split("\n"))}
           />
           <TextArea
             label="Texto de presentación"
