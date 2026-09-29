@@ -81,24 +81,30 @@ export default function Contact() {
           </p>
 
           <div className="mt-10 space-y-5" data-testid="contact-info-list">
-            <div className="flex items-center gap-4 text-[#FAF7F2]/85">
-              <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
-                <Mail className="w-5 h-5" strokeWidth={1.75} />
-              </span>
-              <span className="text-sm sm:text-base">{contact.email}</span>
-            </div>
-            <div className="flex items-center gap-4 text-[#FAF7F2]/85">
-              <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
-                <Phone className="w-5 h-5" strokeWidth={1.75} />
-              </span>
-              <span className="text-sm sm:text-base">{contact.phone}</span>
-            </div>
-            <div className="flex items-center gap-4 text-[#FAF7F2]/85">
-              <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
-                <MapPin className="w-5 h-5" strokeWidth={1.75} />
-              </span>
-              <span className="text-sm sm:text-base">{contact.location}</span>
-            </div>
+            {contact.emailVisible && (
+              <div className="flex items-center gap-4 text-[#FAF7F2]/85">
+                <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
+                  <Mail className="w-5 h-5" strokeWidth={1.75} />
+                </span>
+                <span className="text-sm sm:text-base">{contact.email}</span>
+              </div>
+            )}
+            {contact.phoneVisible && (
+              <div className="flex items-center gap-4 text-[#FAF7F2]/85">
+                <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
+                  <Phone className="w-5 h-5" strokeWidth={1.75} />
+                </span>
+                <span className="text-sm sm:text-base">{contact.phone}</span>
+              </div>
+            )}
+            {contact.locationVisible && (
+              <div className="flex items-center gap-4 text-[#FAF7F2]/85">
+                <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FAF7F2]/10">
+                  <MapPin className="w-5 h-5" strokeWidth={1.75} />
+                </span>
+                <span className="text-sm sm:text-base">{contact.location}</span>
+              </div>
+            )}
           </div>
         </Reveal>
 

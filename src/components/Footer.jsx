@@ -10,13 +10,17 @@ import { useContent } from "@/content/ContentProvider";
 
 export default function Footer() {
   const { brand, contact, footer } = useContent();
+  const hasVisibleContact =
+    contact.emailVisible || contact.phoneVisible || contact.locationVisible;
   return (
     <footer
       data-testid="main-footer"
       className="bg-[#2D4030] border-t border-[#FAF7F2]/10"
     >
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div
+          className={`grid grid-cols-1 ${hasVisibleContact ? "md:grid-cols-3" : "md:grid-cols-2"} gap-10`}
+        >
           <div>
             <a
               href="#inicio"
@@ -31,16 +35,18 @@ export default function Footer() {
             </p>
           </div>
 
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">
-              {footer.contactHeading}
-            </h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-[#FAF7F2]/75">
-              <li>{contact.email}</li>
-              <li>{contact.phone}</li>
-              <li>{contact.location}</li>
-            </ul>
-          </div>
+          {hasVisibleContact && (
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">
+                {footer.contactHeading}
+              </h3>
+              <ul className="mt-4 space-y-2.5 text-sm text-[#FAF7F2]/75">
+                {contact.emailVisible && <li>{contact.email}</li>}
+                {contact.phoneVisible && <li>{contact.phone}</li>}
+                {contact.locationVisible && <li>{contact.location}</li>}
+              </ul>
+            </div>
+          )}
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8A9A86]">

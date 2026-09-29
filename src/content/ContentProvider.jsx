@@ -79,6 +79,9 @@ const contentSchema = z.object({
     email: z.string(),
     phone: z.string(),
     location: z.string(),
+    emailVisible: z.boolean().default(true),
+    phoneVisible: z.boolean().default(true),
+    locationVisible: z.boolean().default(true),
   }),
   footer: z.object({
     description: z.string(),

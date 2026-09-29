@@ -20,8 +20,10 @@ import {
   Loader2,
   LogOut,
   Mail,
+  Plus,
   Save,
   Trash2,
+  Upload,
 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, csrfConfig } from "@/admin/api";
@@ -487,6 +489,22 @@ function AdminContent() {
     <form
       onSubmit={(event) => {
         event.preventDefault();
+        const hasIncompleteItems =
+          content.services.items.some(
+            (service) => !service.title.trim() || !service.description.trim(),
+          ) ||
+          content.testimonials.items.some(
+            (testimonial) =>
+              !testimonial.initials.trim() ||
+              !testimonial.tag.trim() ||
+              !testimonial.quote.trim(),
+          );
+        if (hasIncompleteItems) {
+          toast.error(
+            "Completa los campos de servicios y testimonios antes de guardar.",
+          );
+          return;
+        }
         save.mutate();
       }}
     >
@@ -585,8 +603,8 @@ function AdminContent() {
             value={content.hero.trustNote}
             onChange={(value) => update("hero.trustNote", value)}
           />
-          <Field
-            label="URL de imagen"
+          <ImageUpload
+            label="Imagen de portada"
             value={content.hero.imageUrl}
             onChange={(value) => update("hero.imageUrl", value)}
           />
@@ -624,8 +642,8 @@ function AdminContent() {
             value={content.about.keywords.join("\n")}
             onChange={(value) => listUpdate("about.keywords", value)}
           />
-          <Field
-            label="URL de imagen"
+          <ImageUpload
+            label="Imagen de perfil"
             value={content.about.imageUrl}
             onChange={(value) => update("about.imageUrl", value)}
           />
@@ -650,8 +668,35 @@ function AdminContent() {
                   update(`services.items.${index}.description`, value)
                 }
               />
+              <button
+                type="button"
+                onClick={() =>
+                  update(
+                    "services.items",
+                    content.services.items.filter(
+                      (_, itemIndex) => itemIndex !== index,
+                    ),
+                  )
+                }
+                disabled={content.services.items.length === 1}
+                className="inline-flex items-center gap-2 text-sm font-medium text-[#B7543C] hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Trash2 className="h-4 w-4" /> Eliminar servicio
+              </button>
             </div>
           ))}
+          <button
+            type="button"
+            onClick={() =>
+              update("services.items", [
+                ...content.services.items,
+                { title: "", description: "" },
+              ])
+            }
+            className="inline-flex items-center gap-2 rounded-full border border-[#D9D2C7] px-4 py-2.5 text-sm font-semibold text-[#2D4030] hover:bg-[#F6F2EB]"
+          >
+            <Plus className="h-4 w-4" /> Añadir servicio
+          </button>
         </EditorSection>
         <EditorSection title="Testimonios">
           {content.testimonials.items.map((testimonial, index) => (
@@ -682,8 +727,35 @@ function AdminContent() {
                   update(`testimonials.items.${index}.quote`, value)
                 }
               />
+              <button
+                type="button"
+                onClick={() =>
+                  update(
+                    "testimonials.items",
+                    content.testimonials.items.filter(
+                      (_, itemIndex) => itemIndex !== index,
+                    ),
+                  )
+                }
+                disabled={content.testimonials.items.length === 1}
+                className="inline-flex items-center gap-2 text-sm font-medium text-[#B7543C] hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Trash2 className="h-4 w-4" /> Eliminar testimonio
+              </button>
             </div>
           ))}
+          <button
+            type="button"
+            onClick={() =>
+              update("testimonials.items", [
+                ...content.testimonials.items,
+                { initials: "", tag: "", quote: "" },
+              ])
+            }
+            className="inline-flex items-center gap-2 rounded-full border border-[#D9D2C7] px-4 py-2.5 text-sm font-semibold text-[#2D4030] hover:bg-[#F6F2EB]"
+          >
+            <Plus className="h-4 w-4" /> Añadir testimonio
+          </button>
         </EditorSection>
         <EditorSection title="Contacto y pie">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -692,16 +764,31 @@ function AdminContent() {
               value={content.contact.email}
               onChange={(value) => update("contact.email", value)}
             />
+            <VisibilityToggle
+              label="Mostrar email en la web"
+              checked={content.contact.emailVisible}
+              onChange={(value) => update("contact.emailVisible", value)}
+            />
             <Field
               label="Teléfono"
               value={content.contact.phone}
               onChange={(value) => update("contact.phone", value)}
+            />
+            <VisibilityToggle
+              label="Mostrar teléfono en la web"
+              checked={content.contact.phoneVisible}
+              onChange={(value) => update("contact.phoneVisible", value)}
             />
           </div>
           <Field
             label="Ubicación"
             value={content.contact.location}
             onChange={(value) => update("contact.location", value)}
+          />
+          <VisibilityToggle
+            label="Mostrar ubicación en la web"
+            checked={content.contact.locationVisible}
+            onChange={(value) => update("contact.locationVisible", value)}
           />
           <TextArea
             label="Texto de contacto"
@@ -781,6 +868,95 @@ function Field({ label, value, onChange }) {
         onChange={(event) => onChange(event.target.value)}
         className={inputClass}
       />
+    </label>
+  );
+}
+function ImageUpload({ label, value, onChange }) {
+  const inputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const upload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    setIsUploading(true);
+    try {
+      const response = await adminApi.post(
+        "/admin/uploads",
+        formData,
+        csrfConfig(),
+      );
+      onChange(response.data.url);
+      toast.success("Imagen subida.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.detail ?? "No se pudo subir la imagen.",
+      );
+    } finally {
+      setIsUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div>
+      <p className={labelClass}>{label}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-4">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="sr-only"
+          aria-label={`Seleccionar ${label.toLowerCase()}`}
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) upload(file);
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={isUploading}
+          className="inline-flex items-center gap-2 rounded-full border border-[#D9D2C7] px-4 py-2.5 text-sm font-semibold text-[#2D4030] hover:bg-[#F6F2EB] disabled:opacity-50"
+        >
+          {isUploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Upload className="h-4 w-4" />
+          )}
+          {isUploading ? "Subiendo…" : "Elegir imagen"}
+        </button>
+        <span className="min-w-0 flex-1 break-all text-xs text-[#625D56]">
+          {value}
+        </span>
+        {value && (
+          <img
+            src={value}
+            alt={`Vista previa de ${label.toLowerCase()}`}
+            className="h-20 w-20 rounded-lg border border-[#DED6CA] object-cover"
+          />
+        )}
+      </div>
+      <p className="mt-2 text-xs text-[#625D56]">
+        JPG, PNG o WEBP · máximo 5 MB
+      </p>
+    </div>
+  );
+}
+function VisibilityToggle({ label, checked, onChange }) {
+  return (
+    <label className="flex min-h-11 items-center justify-between gap-3 text-sm font-medium text-[#403B37]">
+      <span>{label}</span>
+      <span className="relative inline-flex shrink-0 items-center">
+        <input
+          type="checkbox"
+          role="switch"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          className="peer sr-only"
+        />
+        <span className="h-6 w-11 rounded-full bg-[#D9D2C7] transition-colors peer-checked:bg-[#687B64] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#687B64]" />
+        <span className="pointer-events-none absolute left-1 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+      </span>
     </label>
   );
 }
