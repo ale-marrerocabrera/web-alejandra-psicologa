@@ -51,32 +51,39 @@ export default function Footer() {
                 {
                   icon: Instagram,
                   label: "Instagram",
+                  href: footer.socials.instagram,
                   testid: "footer-social-instagram",
                 },
                 {
                   icon: Linkedin,
                   label: "LinkedIn",
+                  href: footer.socials.linkedin,
                   testid: "footer-social-linkedin",
                 },
                 {
                   icon: Facebook,
                   label: "Facebook",
+                  href: footer.socials.facebook,
                   testid: "footer-social-facebook",
                 },
-              ].map(({ icon: Icon, label, testid }) => (
-                <a
-                  key={label}
-                  href="#inicio"
-                  data-testid={testid}
-                  aria-label={label}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FAF7F2]/10 text-[#FAF7F2]/80 hover:bg-[#C86D51] hover:text-[#FAF7F2] transition-colors duration-300"
-                >
-                  <Icon
-                    className="w-4.5 h-4.5 w-[18px] h-[18px]"
-                    strokeWidth={1.75}
-                  />
-                </a>
-              ))}
+              ]
+                .filter(({ href }) => href.trim())
+                .map(({ icon: Icon, label, href, testid }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    data-testid={testid}
+                    aria-label={label}
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FAF7F2]/10 text-[#FAF7F2]/80 hover:bg-[#C86D51] hover:text-[#FAF7F2] transition-colors duration-300"
+                  >
+                    <Icon
+                      className="w-4.5 h-4.5 w-[18px] h-[18px]"
+                      strokeWidth={1.75}
+                    />
+                  </a>
+                ))}
             </div>
           </div>
         </div>
@@ -110,8 +117,14 @@ export default function Footer() {
                 <p>
                   Nunca se cederán a terceros ni se usarán con fines
                   comerciales. Puedes solicitar en cualquier momento el acceso,
-                  rectificación o eliminación de tus datos escribiendo a
-                  [email@placeholder.com].
+                  rectificación o eliminación de tus datos escribiendo a{" "}
+                  <a
+                    href={`mailto:${footer.privacyEmail}`}
+                    className="underline underline-offset-2"
+                  >
+                    {footer.privacyEmail}
+                  </a>
+                  .
                 </p>
                 <p>
                   La información compartida en el ámbito terapéutico está

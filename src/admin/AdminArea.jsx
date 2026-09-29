@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Link,
@@ -8,6 +8,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useOutletContext,
 } from "react-router-dom";
 import {
   Archive,
@@ -55,6 +56,16 @@ function RequireAdmin() {
 
 function AdminShell({ user }) {
   const queryClient = useQueryClient();
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const warnBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [hasUnsavedChanges]);
   const navigate = useNavigate();
   const logout = useMutation({
     mutationFn: () => adminApi.post("/admin/auth/logout", {}, csrfConfig()),
@@ -71,7 +82,25 @@ function AdminShell({ user }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F6F2EB] text-[#2C2A29]">
+    <div
+      onClickCapture={(event) => {
+        if (!hasUnsavedChanges) return;
+        const link = event.target.closest("a[href]");
+        if (!link || new URL(link.href).pathname === window.location.pathname)
+          return;
+        if (
+          !window.confirm(
+            "Hay cambios sin guardar. Si sales ahora, se perderan. ¿Quieres continuar?",
+          )
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+        setHasUnsavedChanges(false);
+      }}
+      className="min-h-screen bg-[#F6F2EB] text-[#2C2A29]"
+    >
       <header className="border-b border-[#DED6CA] bg-[#FAF7F2]">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <Link to="/admin" className="font-serif text-2xl text-[#2D4030]">
@@ -80,7 +109,17 @@ function AdminShell({ user }) {
           <div className="flex items-center gap-3 text-sm text-[#625D56]">
             <span className="hidden sm:inline">{user.email}</span>
             <button
-              onClick={() => logout.mutate()}
+              onClick={() => {
+                if (
+                  hasUnsavedChanges &&
+                  !window.confirm(
+                    "Hay cambios sin guardar. Si sales ahora, se perder�n. �Quieres continuar?",
+                  )
+                )
+                  return;
+                setHasUnsavedChanges(false);
+                logout.mutate();
+              }}
               disabled={logout.isPending}
               className="inline-flex items-center gap-2 rounded-full border border-[#D9D2C7] px-3 py-2 hover:bg-white disabled:opacity-50"
             >
@@ -115,7 +154,7 @@ function AdminShell({ user }) {
           </Link>
         </nav>
         <main>
-          <Outlet />
+          <Outlet context={{ setHasUnsavedChanges }} />
         </main>
       </div>
     </div>
@@ -348,14 +387,16 @@ function AdminMessages() {
                   {message.message}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2 border-t border-[#EEE9E1] pt-4">
-                  <button
-                    onClick={() =>
-                      changeStatus.mutate({ id: message.id, status: "read" })
-                    }
-                    className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]"
-                  >
-                    Marcar leído
-                  </button>
+                  {message.status !== "read" && (
+                    <button
+                      onClick={() =>
+                        changeStatus.mutate({ id: message.id, status: "read" })
+                      }
+                      className="rounded-full border border-[#D9D2C7] px-3 py-2 text-xs font-semibold hover:bg-[#F6F2EB]"
+                    >
+                      Marcar leído
+                    </button>
+                  )}
                   <button
                     onClick={() =>
                       changeStatus.mutate({
@@ -391,14 +432,24 @@ function AdminMessages() {
 }
 
 function AdminContent() {
+  const { setHasUnsavedChanges } = useOutletContext();
+  const originalContent = useRef(null);
   const contentQuery = useQuery({
     queryKey: ["admin-homepage"],
     queryFn: async () => (await adminApi.get("/admin/content/homepage")).data,
   });
   const [content, setContent] = useState(null);
   useEffect(() => {
-    if (contentQuery.data?.data) setContent(contentQuery.data.data);
+    if (contentQuery.data?.data) {
+      originalContent.current = JSON.stringify(contentQuery.data.data);
+      setContent(contentQuery.data.data);
+    }
   }, [contentQuery.data]);
+  useEffect(() => {
+    if (content && originalContent.current) {
+      setHasUnsavedChanges(JSON.stringify(content) !== originalContent.current);
+    }
+  }, [content, setHasUnsavedChanges]);
   const save = useMutation({
     mutationFn: () => {
       const data = structuredClone(content);
@@ -406,7 +457,9 @@ function AdminContent() {
       return adminApi.put("/admin/content/homepage", { data }, csrfConfig());
     },
     onSuccess: (response) => {
+      originalContent.current = JSON.stringify(response.data.data);
       setContent(response.data.data);
+      setHasUnsavedChanges(false);
       toast.success("Contenido guardado.");
     },
     onError: () =>
@@ -427,12 +480,7 @@ function AdminContent() {
       return next;
     });
   const listUpdate = (path, value) =>
-    update(
-      path,
-      value
-        .map((item) => item)
-        .filter(Boolean),
-    );
+    update(path, value.map((item) => item).filter(Boolean));
   if (contentQuery.isLoading || !content) return <PanelLoading />;
   if (contentQuery.isError) return <PanelError />;
   return (
@@ -669,6 +717,28 @@ function AdminContent() {
             label="Copyright"
             value={content.footer.copyright}
             onChange={(value) => update("footer.copyright", value)}
+          />
+        </EditorSection>
+        <EditorSection title="Redes sociales y privacidad">
+          <Field
+            label="Instagram · URL"
+            value={content.footer.socials.instagram}
+            onChange={(value) => update("footer.socials.instagram", value)}
+          />
+          <Field
+            label="LinkedIn · URL"
+            value={content.footer.socials.linkedin}
+            onChange={(value) => update("footer.socials.linkedin", value)}
+          />
+          <Field
+            label="Facebook · URL"
+            value={content.footer.socials.facebook}
+            onChange={(value) => update("footer.socials.facebook", value)}
+          />
+          <Field
+            label="Email para el aviso de privacidad"
+            value={content.footer.privacyEmail}
+            onChange={(value) => update("footer.privacyEmail", value)}
           />
         </EditorSection>
       </div>
