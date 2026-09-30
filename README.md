@@ -15,11 +15,17 @@ El frontend consulta por defecto la API en `http://localhost:8080`. Para cambiar
 
 ## Producción con Docker
 
+La configuración de esta rama está preparada para que el Nginx del servidor
+publique el frontend y redirija `/api/` al backend bajo el mismo dominio. Por
+ello, la imagen se construye con `VITE_API_URL` vacío y las peticiones se
+realizan contra rutas relativas como `/api/content`.
+
 ```bash
 docker compose up --build
 ```
 
-La aplicación estará disponible en `http://localhost:3000`.
+El contenedor queda disponible solamente en `127.0.0.1:3000`, para que el
+Nginx del servidor sea el único punto de entrada público.
 
 La imagen construye los archivos estáticos y los sirve mediante Nginx. La configuración de Nginx también admite rutas del cliente de React.
 

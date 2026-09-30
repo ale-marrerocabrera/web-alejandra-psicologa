@@ -4,7 +4,9 @@ services:
       context: .
       target: production
       args:
-        VITE_API_URL: http://localhost:8080
+        # La API se sirve bajo el mismo dominio mediante el Nginx del servidor.
+        VITE_API_URL: ""
     ports:
-      - "3000:80"
+      # Solo el Nginx del servidor debe poder acceder al contenedor.
+      - "127.0.0.1:3000:80"
     restart: unless-stopped
