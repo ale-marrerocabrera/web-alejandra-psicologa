@@ -8,5 +8,5 @@ services:
         VITE_API_URL: ""
     ports:
       # Solo el Nginx del servidor debe poder acceder al contenedor.
-      - "127.0.0.1:3000:80"
+      - "127.0.0.1:13000:80"
     restart: unless-stopped

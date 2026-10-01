@@ -24,7 +24,7 @@ realizan contra rutas relativas como `/api/content`.
 docker compose up --build
 ```
 
-El contenedor queda disponible solamente en `127.0.0.1:3000`, para que el
+El contenedor queda disponible solamente en `127.0.0.1:13000`, para que el
 Nginx del servidor sea el único punto de entrada público.
 
 La imagen construye los archivos estáticos y los sirve mediante Nginx. La configuración de Nginx también admite rutas del cliente de React.
